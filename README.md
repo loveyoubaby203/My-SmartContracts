@@ -1,1 +1,1 @@
-# My-SmartContracts
+# Smart-Contracts
