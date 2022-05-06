@@ -57,24 +57,25 @@ contract Root {
         return (prefix, suffix);
     }
 
-    function mainFormula(uint _value1, uint _value2, uint _dp, uint _maxIts) pure public returns(uint) {
-        uint value1 = _value1 * (10 ** _dp);
-        uint value2 = _value2 * (10 ** _dp);
-        uint res1 = 625 * ( 10 ** _dp ) * value1 / 100;
-        uint res2 = value2 * nthRoot(_value2, 4, _dp, _maxIts);
-        uint res = (res1 + res2) / (( 10 ** _dp )*( 10 ** _dp ));
-        if(res == 0) return 0;
+    function mainFormula(uint _value1, uint _value2, uint _dp, uint _maxIts) pure public returns(uint, uint) {
+        uint result = 0;
+        if(_value1 == 0) return (result, 0);
+        uint one = 10 ** _dp;
+        uint firstRes = (625 * one) * (_value1 * one) / 100 + (_value2 * one) * nthRoot(_value2, 4, _dp, _maxIts);
+        uint res = 0;
+        res = firstRes / (one*one);
+        if(res == 0) return (result, 0);
         uint pre = 0;
         uint suff = 0;
         (pre, suff) = splitNum(res);
-        uint nres = 0;
+        uint nRes = 0;
         if(suff == 0)
-            nres = nthRoot(res, 5, _dp, _maxIts);
+            nRes = nthRoot(res, 5, _dp, _maxIts);
         else
-            nres = nthRoot(pre, 5, _dp, _maxIts) * nthRoot(suff, 5, _dp, _maxIts) / (10 ** _dp);
-        uint result = (res1 + res2) / nres - _value2 * (10 ** _dp);
+            nRes = nthRoot(pre, 5, _dp, _maxIts) * nthRoot(suff, 5, _dp, _maxIts) / one;
+        result = firstRes / nRes - _value2 * one;
         // return (res1, res2, res, nres, result);
-        return result;
+        // return (result, nRes);
+        return (result, firstRes);
     }
-
 }
