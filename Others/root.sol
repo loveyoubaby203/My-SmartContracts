@@ -57,14 +57,14 @@ contract Root {
         return (prefix, suffix);
     }
 
-    function mainFormula(uint _value1, uint _value2, uint _dp, uint _maxIts) pure public returns(uint, uint) {
+    function mainFormula(uint _value1, uint _value2, uint _dp, uint _maxIts) pure public returns(uint) {
         uint result = 0;
-        if(_value1 == 0) return (result, 0);
+        if(_value1 == 0) return result;
         uint one = 10 ** _dp;
         uint firstRes = (625 * one) * (_value1 * one) / 100 + (_value2 * one) * nthRoot(_value2, 4, _dp, _maxIts);
         uint res = 0;
         res = firstRes / (one*one);
-        if(res == 0) return (result, 0);
+        if(res == 0) return result;
         uint pre = 0;
         uint suff = 0;
         (pre, suff) = splitNum(res);
@@ -76,6 +76,6 @@ contract Root {
         result = firstRes / nRes - _value2 * one;
         // return (res1, res2, res, nres, result);
         // return (result, nRes);
-        return (result, firstRes);
+        return result;
     }
 }
